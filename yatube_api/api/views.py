@@ -1,10 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
-from rest_framework import status
-from posts.models import Post, Comment, Group
+from rest_framework.exceptions import PermissionDenied
+from posts.models import Post, Group
 from .serializers import PostSerializer, CommentSerializer, GroupSerializer
-from .permissions import IsAuthorOrReadOnly
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -15,12 +14,12 @@ class PostViewSet(viewsets.ModelViewSet):
     
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            return
+            raise PermissionDenied('Операция отменена: Вы - не автор!')
         instance.delete()
         
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            return
+            raise PermissionDenied('Операция отменена: Вы - не автор!')
         super().perform_update(serializer)
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -37,12 +36,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     
     def perform_destroy(self, instance):
         if instance.author != self.request.user:
-            return
+            raise PermissionDenied('Операция отменена: Вы - не автор!')
         instance.delete()
     
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            return
+            raise PermissionDenied('Операция отменена: Вы - не автор!')
         super().perform_update(serializer)
     
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
