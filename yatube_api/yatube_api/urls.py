@@ -2,10 +2,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.shortcuts import redirect
+from rest_framework.authtoken.views import obtain_auth_token
+
+def redirect_to_api(request):
+    return redirect('/api/v1/')
 
 urlpatterns = [
+    path('', redirect_to_api),
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
+    path('api/v1/api-token-auth/', obtain_auth_token),  
+    path('api/v1/', include('api.urls')),  
 ]
 
 
