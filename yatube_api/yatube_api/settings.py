@@ -87,7 +87,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-#Настройка аутентификации по токену
+
+# Настройка аутентификации по токену
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
